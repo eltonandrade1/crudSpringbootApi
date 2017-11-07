@@ -2,6 +2,7 @@ package com.elton.springboot.service;
 
 import java.util.List;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.elton.springboot.model.Pessoa;
 import com.elton.springboot.repository.CategoriaRepository;
 import com.elton.springboot.repository.LancamentoRepository;
 import com.elton.springboot.repository.PessoaRepository;
+import com.elton.springboot.repository.filter.LancamentoFilter;
 
 @Service
 public class LancamentoService {
@@ -57,6 +59,26 @@ public class LancamentoService {
 			throw new CategoriaInexistenteException();
 		}
 		
+		return lancamentoRepository.save(lancamento);
+	}
+
+	public List<Lancamento> pesquisar(LancamentoFilter filter) {
+		return lancamentoRepository.pesquisar(filter);
+	}
+
+	public void remover(Long id) {
+		lancamentoRepository.delete(id);
+		
+	}
+	
+	public Lancamento atualizar(Long id, Lancamento lancamento) {
+		Lancamento lancamentoSalvo = getById(id);
+		if(lancamentoSalvo != null) {
+			// Copia as propriedades do objeto pessoa para pessoaSalva ignorando o id.
+			BeanUtils.copyProperties(lancamento, lancamentoSalvo, "id");
+		} else {
+			throw new EmptyResultDataAccessException(1); 
+		}
 		return lancamentoRepository.save(lancamento);
 	}
 
