@@ -8,8 +8,11 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.token.AccessTokenConverter;
 import org.springframework.security.oauth2.provider.token.TokenStore;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
 
 @Configuration
 @EnableAuthorizationServer
@@ -29,9 +32,10 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 			.withClient("angular") // define um cliente angular (login)
 			.secret("@angular@") // senha de acesso do cliente
 			.scopes("read", "write") // permissões de acesso 
-			.authorizedGrantTypes("password") // será utilzada senha informado pelo usuario na aplicação angular
-			.accessTokenValiditySeconds(1800); // configura o tempo que o token fica ativo expresso em segundos (1800seg = 30min)
-	}
+			.authorizedGrantTypes("password", "refresh_token") // será utilzada senha informado pelo usuario na aplicação angular e autenticação via token
+			.accessTokenValiditySeconds(20) // configura o tempo que o token fica ativo expresso em segundos
+			.refreshTokenValiditySeconds(3600 * 24); // configura a validade do refresh token para 24 horas (3600seg = 1 hora * 24 = 1 dia)
+	}		
 	
 	/**
 	 * Metedo realiza a autenticação atraves do token e o authenticationManager
@@ -40,12 +44,27 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	 */
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
-		endpoints.tokenStore(tokenStore()).authenticationManager(authenticationManager);
+		endpoints.tokenStore(tokenStore())
+			.accessTokenConverter(accessTokenConverter())
+			.reuseRefreshTokens(false) // após a expiraçao no token será gerado um novo e não reaproveitado.
+			.authenticationManager(authenticationManager);
 	}
 	
 	/**
-	 * Método retorna o objeto TokenStore e armazena em memória, onde também 
-	 * poderia ser armazenado em banco
+	 * Método retorna um AccessTokenConverter configurado com a palavra chave
+	 * @return AccessTokenConverter
+	 * 
+	 * @author elton
+	 */
+	@Bean
+	public JwtAccessTokenConverter accessTokenConverter() {
+		JwtAccessTokenConverter  accessTokenConverter = new JwtAccessTokenConverter();
+		accessTokenConverter.setSigningKey("elton123"); // chave secreta utilizada
+		return accessTokenConverter;
+	}
+
+	/**
+	 * Método retorna o objeto TokenStore utilizando JwtAccessTokenConverter
 	 * 
 	 * @return TokenStore
 	 * @author elton
@@ -53,7 +72,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	 */
 	@Bean
 	public TokenStore tokenStore() {
-		return new InMemoryTokenStore();
+		return new JwtTokenStore(accessTokenConverter());
 	}
 
 }
