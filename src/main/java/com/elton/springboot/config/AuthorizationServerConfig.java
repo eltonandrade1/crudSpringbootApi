@@ -34,7 +34,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 			.secret("@angular@") // senha de acesso do cliente
 			.scopes("read", "write") // permissões de acesso 
 			.authorizedGrantTypes("password", "refresh_token") // será utilzada senha informado pelo usuario na aplicação angular e autenticação via token
-			.accessTokenValiditySeconds(20) // configura o tempo que o token fica ativo expresso em segundos
+			.accessTokenValiditySeconds(60) // configura o tempo que o token fica ativo expresso em segundos
 			.refreshTokenValiditySeconds(3600 * 24); // configura a validade do refresh token para 24 horas (3600seg = 1 hora * 24 = 1 dia)
 	}		
 	

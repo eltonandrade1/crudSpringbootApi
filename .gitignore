@@ -14,6 +14,7 @@ target/
 **/.classpath
 **/.settings/
 **/.tern-project
+**/.mvn/
 
 ### IntelliJ IDEA ###
 .idea
