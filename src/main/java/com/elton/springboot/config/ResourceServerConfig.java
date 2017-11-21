@@ -36,7 +36,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 	@Override
 	public void configure(HttpSecurity http) throws Exception {
 		http.authorizeRequests()
-		.antMatchers("/categorias").permitAll() // permite acesso a qualquer usuario sem autenticação
+		.antMatchers("/categorias").permitAll() // permite acesso a qualquer usuario sem autenticação ao listar categorias
 		.anyRequest().authenticated() //qualquer requisição o usuário precisa estar autenticado
 //		.and().httpBasic() // tipo de autenticação basica
 		.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) //nao mantem sessão no servidor

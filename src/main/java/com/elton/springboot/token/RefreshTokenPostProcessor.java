@@ -76,7 +76,7 @@ public class RefreshTokenPostProcessor implements ResponseBodyAdvice<OAuth2Acces
 	 * @author elton
 	 */
 	private void addRefreshTokenInCookie(String refreshToken, HttpServletRequest req, HttpServletResponse resp) {
-		//Criando objeto cookie
+		//Criando objeto cookie e atribuindo o nome
 		Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
 		//Cookie somente será acessivel via http
 		refreshTokenCookie.setHttpOnly(true);
