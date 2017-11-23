@@ -32,10 +32,17 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 		clients.inMemory() // armazena em memória, mas poderia ser banco
 			.withClient("angular") // define um cliente angular (login)
 			.secret("@angular@") // senha de acesso do cliente
-			.scopes("read", "write") // permissões de acesso 
+			.scopes("read", "write") // permissões de acesso para aplicaçao cliente (mesmo um usuário admin nessa aplicaçao somente ler e escreve) 
 			.authorizedGrantTypes("password", "refresh_token") // será utilzada senha informado pelo usuario na aplicação angular e autenticação via token
-			.accessTokenValiditySeconds(20) // configura o tempo que o token fica ativo expresso em segundos
-			.refreshTokenValiditySeconds(3600 * 24); // configura a validade do refresh token para 24 horas (3600seg = 1 hora * 24 = 1 dia)
+			.accessTokenValiditySeconds(1800) // configura o tempo que o token fica ativo expresso em segundos
+			.refreshTokenValiditySeconds(3600 * 24) // configura a validade do refresh token para 24 horas (3600seg = 1 hora * 24 = 1 dia)
+			.and()
+			.withClient("mobile") // cliente mobile
+			.secret("m0b1l30")
+			.scopes("read") // permissões de acesso para aplicaçao mobile (mesmo um usuário admin nessa aplicaçao somente ler)
+			.authorizedGrantTypes("password", "refresh_token")
+			.accessTokenValiditySeconds(1800)
+			.refreshTokenValiditySeconds(3600 * 24);
 	}		
 	
 	/**

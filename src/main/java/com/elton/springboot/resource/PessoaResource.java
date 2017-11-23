@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -35,12 +36,14 @@ public class PessoaResource {
 	private PessoaService pessoaService;
 
 	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
 	protected List<Pessoa> findAll() {
 		return pessoaService.findAll();
 	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
 	protected ResponseEntity<Pessoa> salvarPessoa(@Valid @RequestBody Pessoa pessoa, HttpServletResponse response) {
 		Pessoa pessoaSalva = pessoaService.salvar(pessoa);
 
@@ -54,6 +57,7 @@ public class PessoaResource {
 	}
 
 	@GetMapping("/{id}")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
 	protected ResponseEntity<Pessoa> getById(@PathVariable Long id) {
 		Pessoa pessoa = pessoaService.buscarPessoa(id);
 		return ResponseEntity.ok(pessoa);
@@ -61,6 +65,7 @@ public class PessoaResource {
 	
 	@DeleteMapping("/{id}")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
 	protected void remover(@PathVariable Long id) {
 		pessoaService.remover(id);
 	}
@@ -73,6 +78,7 @@ public class PessoaResource {
 //	}
 	
 	@PutMapping("/{id}")
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
 	protected ResponseEntity<Pessoa> atualizar(@PathVariable Long id, @Valid @RequestBody Pessoa pessoa) {
 		Pessoa pessoaSalva = pessoaService.atualizar(id, pessoa);
 		return ResponseEntity.ok(pessoaSalva);
@@ -80,6 +86,7 @@ public class PessoaResource {
 	
 	@PutMapping("/{id}/status")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
 	public void atualizarPropriedadeAtivo(@PathVariable Long id, @RequestBody Boolean status) {
 		pessoaService.atualizarPropriedadeAtivo(id, status);
 
