@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.elton.springboot.event.RecursoCriadoEvent;
 import com.elton.springboot.model.Lancamento;
 import com.elton.springboot.repository.filter.LancamentoFilter;
+import com.elton.springboot.repository.projection.ResumoLancamento;
 import com.elton.springboot.service.LancamentoService;
 
 @RestController
@@ -39,6 +40,18 @@ public class LancamentoResource {
 	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
 	protected List<Lancamento> pesquisar(LancamentoFilter filter) {
 		return lancamentoService.pesquisar(filter);
+	}
+	
+	/**
+	 * Método utilizado para uma consulta resumida de lançamentos
+	 * @param lancamentoFilter
+	 * @return ResumoLancamento
+	 * @author elton
+	 */
+	@GetMapping(params = "resumo")
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_LANCAMENTO') and #oauth2.hasScope('read')")
+	public List<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter) {
+		return lancamentoService.resumir(lancamentoFilter);
 	}
 	
 	@GetMapping("/{id}")

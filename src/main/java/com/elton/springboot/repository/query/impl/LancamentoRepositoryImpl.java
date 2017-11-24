@@ -13,9 +13,12 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.util.StringUtils;
 
+import com.elton.springboot.model.Categoria_;
 import com.elton.springboot.model.Lancamento;
 import com.elton.springboot.model.Lancamento_;
+import com.elton.springboot.model.Pessoa_;
 import com.elton.springboot.repository.filter.LancamentoFilter;
+import com.elton.springboot.repository.projection.ResumoLancamento;
 import com.elton.springboot.repository.query.LancamentoRepositoryQuery;
 
 public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
@@ -68,6 +71,28 @@ public class LancamentoRepositoryImpl implements LancamentoRepositoryQuery {
 		}
 
 		return predicates.toArray(new Predicate[predicates.size()]);
+	}
+
+	@Override
+	public List<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter) {
+		
+		CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<ResumoLancamento> criteria = builder.createQuery(ResumoLancamento.class);
+		Root<Lancamento> root = criteria.from(Lancamento.class);
+		
+		criteria.select(builder.construct(ResumoLancamento.class
+				, root.get(Lancamento_.id), root.get(Lancamento_.descricao)
+				, root.get(Lancamento_.dataVencimento), root.get(Lancamento_.dataPagamento)
+				, root.get(Lancamento_.valor), root.get(Lancamento_.tipo)
+				, root.get(Lancamento_.categoria).get(Categoria_.nome)
+				, root.get(Lancamento_.pessoa).get(Pessoa_.nome)));
+		
+		Predicate[] predicates = criarRestricoes(lancamentoFilter, builder, root);
+		criteria.where(predicates);
+		
+		TypedQuery<ResumoLancamento> query = entityManager.createQuery(criteria);
+		
+		return query.getResultList();
 	}
 
 }

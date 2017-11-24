@@ -16,6 +16,7 @@ import com.elton.springboot.repository.CategoriaRepository;
 import com.elton.springboot.repository.LancamentoRepository;
 import com.elton.springboot.repository.PessoaRepository;
 import com.elton.springboot.repository.filter.LancamentoFilter;
+import com.elton.springboot.repository.projection.ResumoLancamento;
 
 @Service
 public class LancamentoService {
@@ -80,6 +81,16 @@ public class LancamentoService {
 			throw new EmptyResultDataAccessException(1); 
 		}
 		return lancamentoRepository.save(lancamento);
+	}
+
+	/**
+	 * Método utilizado para uma consulta resumida de lançamentos
+	 * @param lancamentoFilter
+	 * @return ResumoLancamento
+	 * @author elton
+	 */
+	public List<ResumoLancamento> resumir(LancamentoFilter lancamentoFilter) {
+		return lancamentoRepository.resumir(lancamentoFilter);
 	}
 
 }
