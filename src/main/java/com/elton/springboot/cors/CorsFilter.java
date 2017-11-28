@@ -11,15 +11,20 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import com.elton.springboot.EstudosApiApplication;
+import com.elton.springboot.config.property.PersonalApiProperty;
 
 @Component
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class CorsFilter implements Filter {
 
-	private String originPermitida = "http://localhost:8080"; // TODO: Configurar para diferentes ambientes
+	@Autowired
+	private PersonalApiProperty personalApiProperty;
 
 	@Override
 	public void destroy() {
@@ -35,11 +40,11 @@ public class CorsFilter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) resp;
 
 		//Configura a origem permitida para requisição
-		response.setHeader("Access-Control-Allow-Origin", originPermitida);
+		response.setHeader("Access-Control-Allow-Origin", personalApiProperty.getOriginPermitida());
 		//Responsavel por enviar o refreshToken armazenado no cookie
 		response.setHeader("Access-Control-Allow-Credentials", "true");
 
-		if ("OPTIONS".equals(request.getMethod()) && originPermitida.equals(request.getHeader("Origin"))) {
+		if ("OPTIONS".equals(request.getMethod()) && personalApiProperty.getOriginPermitida().equals(request.getHeader("Origin"))) {
 			//Configura os metodos http permitidos
 			response.setHeader("Access-Control-Allow-Methods", "POST, GET, DELETE, PUT, OPTIONS");
 			// Configura os headers permitidos
