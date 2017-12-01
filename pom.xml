@@ -87,10 +87,10 @@
 			<artifactId>hibernate-java8</artifactId>
 		</dependency>
 
-		<dependency>
-			<groupId>org.hibernate</groupId>
-			<artifactId>hibernate-jpamodelgen</artifactId>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>org.hibernate</groupId> -->
+<!-- 			<artifactId>hibernate-jpamodelgen</artifactId> -->
+<!-- 		</dependency> -->
 
 		<!-- Suporte jackson para as datas do java8 -->
 		<dependency>
@@ -104,13 +104,6 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.6</version>
 		</dependency>
-		<!-- Resolve o problema de classes duplicadas do maven -->
-		<dependency>
-			<groupId>org.apache.maven</groupId>
-			<artifactId>maven-plugin-api</artifactId>
-			<version>3.5.2</version>
-		</dependency>
-
 
 	</dependencies>
 
