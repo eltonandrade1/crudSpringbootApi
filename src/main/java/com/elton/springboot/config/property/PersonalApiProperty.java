@@ -5,7 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("personal")
 public class PersonalApiProperty {
 	
-
 	private String originPermitida = "http://localhost:8000";
 
 	private final Seguranca seguranca = new Seguranca();
