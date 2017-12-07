@@ -17,12 +17,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.elton.springboot.event.RecursoCriadoEvent;
 import com.elton.springboot.model.Pessoa;
-import com.elton.springboot.repository.PessoaRepository;
 import com.elton.springboot.service.PessoaService;
 
 @RestController
@@ -35,11 +35,11 @@ public class PessoaResource {
 	@Autowired
 	private PessoaService pessoaService;
 
-	@GetMapping
-	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
-	protected List<Pessoa> findAll() {
-		return pessoaService.findAll();
-	}
+//	@GetMapping
+//	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA') and #oauth2.hasScope('read')")
+//	protected List<Pessoa> findAll() {
+//		return pessoaService.findAll();
+//	}
 
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
@@ -70,13 +70,6 @@ public class PessoaResource {
 		pessoaService.remover(id);
 	}
 	
-	//TODO Consertar
-//	@GetMapping("/nome")
-//	protected ResponseEntity<Pessoa> findByNome(@RequestBody String nome) {
-//		Pessoa pessoa = pessoaRepository.findByNome(nome);
-//		return pessoa != null ? ResponseEntity.ok(pessoa) : ResponseEntity.notFound().build();
-//	}
-	
 	@PutMapping("/{id}")
 	@PreAuthorize("hasAuthority('ROLE_CADASTRAR_PESSOA') and #oauth2.hasScope('write')")
 	protected ResponseEntity<Pessoa> atualizar(@PathVariable Long id, @Valid @RequestBody Pessoa pessoa) {
@@ -90,6 +83,12 @@ public class PessoaResource {
 	public void atualizarPropriedadeAtivo(@PathVariable Long id, @RequestBody Boolean status) {
 		pessoaService.atualizarPropriedadeAtivo(id, status);
 
+	}
+	
+	@GetMapping
+	@PreAuthorize("hasAuthority('ROLE_PESQUISAR_PESSOA')")
+	protected List<Pessoa> pesquisar(@RequestParam(required = false, defaultValue = "%") String nome) {
+		return pessoaService.findByNomeContaining(nome);
 	}
 
 }

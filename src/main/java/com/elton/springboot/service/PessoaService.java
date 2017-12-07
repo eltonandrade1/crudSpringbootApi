@@ -57,4 +57,8 @@ public class PessoaService {
 		return pessoaRepository.findAll();
 	}
 
+	public List<Pessoa> findByNomeContaining(String nome) {
+		return pessoaRepository.findByNomeContaining(nome);
+	}
+
 }
