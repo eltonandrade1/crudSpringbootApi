@@ -10,7 +10,7 @@ import com.elton.springboot.config.property.PersonalApiProperty;
 @EnableConfigurationProperties(PersonalApiProperty.class)
 public class EstudosApiApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(EstudosApiApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(EstudosApiApplication.class, args);
+    }
 }
