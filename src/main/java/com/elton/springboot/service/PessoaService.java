@@ -1,18 +1,18 @@
 package com.elton.springboot.service;
 
-import java.util.List;
-
+import com.elton.springboot.model.Pessoa;
+import com.elton.springboot.repository.PessoaRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.elton.springboot.model.Pessoa;
-import com.elton.springboot.repository.PessoaRepository;
+import java.util.List;
 
 @Service
 public class PessoaService {
-	
+
+
 	@Autowired
 	private PessoaRepository pessoaRepository;
 	
@@ -40,7 +40,7 @@ public class PessoaService {
 		pessoaSalva.setAtivo(status);
 		pessoaRepository.save(pessoaSalva);
 	}
-	
+
 	private Pessoa getById(Long id) {
 		Pessoa pessoa = pessoaRepository.findOne(id);
 		if(pessoa != null) {
@@ -48,7 +48,7 @@ public class PessoaService {
 		}
 		throw new EmptyResultDataAccessException(1); 
 	}
-	
+    //teste branch
 	public void remover(Long id) {
 		pessoaRepository.delete(id);
 	}
